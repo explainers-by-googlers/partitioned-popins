@@ -42,3 +42,29 @@ In the example below, redirect authentication is blocked by third-party cookie d
 These flows are currently partly detected and mitigated through the [cookie access heuristics](https://github.com/amaliev/3pcd-exemption-heuristics/blob/main/explainer.md) that shipped in major browsers.
 The general consensus is that the web ecosystem needs to find ways to replace the heuristics with more private and secure alternatives.
 We see this proposal as a major contribution to that effort.
+
+## Prior Work
+
+Existing work on the [restrict-properties](https://groups.google.com/a/chromium.org/g/blink-dev/c/JBTWXSHE8M0/) proposal (allowing popups without breaking [crossOriginIsolation](https://developer.mozilla.org/en-US/docs/Web/API/crossOriginIsolated)) ran into feedback from developers who needed a way to focus the opened window (postMessage and closed were not sufficient).
+
+Investigations into [protecting openers](https://groups.google.com/a/chromium.org/g/blink-dev/c/RiNkhQGvmkc/m/jP93p7VLBwAJ) revealed the amount of use in the wild that would have to adapt to such a paradigm, and the need for some underlying improvement in functionality to make the prospect more attractive to developers.
+
+## Goals
+
+* Support common short-lived partitioned popup use cases like login that can/should interrupt other activity on some top-level browsing context.
+* Be secure-by-default (non-impacting to [crossOriginIsolation](https://developer.mozilla.org/en-US/docs/Web/API/crossOriginIsolated)).
+* Ensure the API is forward compatible with potential future needs to add support for unpartitioned popins or popins with a full opener.
+
+## Non-Goals
+
+* Address all popup (or window.opener) based use-cases.
+* Address single-sign-on (SSO) or federated login use cases. To preserve a good user experience and security, one-to-many login scenarios should use FedCM instead.
+* Retain comprehensive cross-window access/management via window.opener.
+* Implement unpartitioned popins.
+
+## Use Cases
+
+* [IDaaS needs a popup to have the same partition as iframe for authentication.](https://github.com/privacycg/CHIPS/issues/80)
+  * To provide login for vanity domains authentication information is passed back from the login popup via embedded iframe. Before third-party cookie deprecation, it was possible for the login iframe to read cookies set by the login popup. As there’s a 1:1 relationship between the origin of the login service and website there’s no disadvantage to having the popup be partitioned (no SSO-like ability is lost).
+* [Embedded enterprise software needs to open pop-ups for some features.](https://github.com/privacycg/CHIPS/issues/82)
+  * When an embedded web application opens a popup for some feature to work, this popup has no access to cookies/storage from the embedded opener context and defaults to being logged out. Before storage partitioning and third-party cookie deprecation, the popup had access to the same authentication information the third-party context did.

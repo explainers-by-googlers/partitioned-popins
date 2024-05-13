@@ -200,3 +200,97 @@ Spoofability should be limited by making this more like a system-window/dialogue
 * How do Partitioned Popins interact with permission delegation and iframe-based permission policies?
 * How do Partitioned Popins interact with Storage Access API requests and active Storage Access permissions?
 * Should autofill information be keyed on opener+popin-origin to prevent autofill based on popin-origin alone?
+
+## Alternatives Considered
+
+### [Storage Access API (SAA)](https://privacycg.github.io/storage-access/)
+
+SAA provides a way for the cross-site iframe to complete authentication by requesting access to the same unpartitioned storage that the popup/redirect just wrote.
+Unfortunately, this access requires user interaction with the iframe, preventing silent token acquisition.
+Further, this API was not intended to be used for login so the wording in the permission prompt the user sees when access is attempted may confuse them.
+
+### [Federated Credential Management (FedCM)](https://fedidcg.github.io/FedCM/)
+
+IDaaS providers are different from federated identity providers, in that user identity is scoped/partitioned to the website that the user is visiting.
+FedCM is targeted to the latter use case so is not a good fit in terms of user prompt language and adoption cost.
+For example, an enterprise single-sign-on (SSO) solution doesn’t want user identities partitioned by service, it wants a single user identity which provides access to multiple services.
+For this reason solutions like [FedCM+SAA](https://github.com/explainers-by-googlers/storage-access-for-fedcm) also would not work.
+
+### [Exemption Heuristics](https://github.com/amaliev/3pcd-exemption-heuristics/blob/main/explainer.md)
+
+This provides an automated way for some login-like flows to automatically grant access to unpartitioned storage in third-party contexts.
+This has the downside of providing access to unpartitioned storage in a partitioned context rather than requiring all storage remain partitioned.
+Additionally, these heuristics may be deprecated and require interaction.
+
+## Privacy & Security Considerations
+
+### Reducing the effectiveness of SSO on the web
+
+As explained, we expect a major use case of partitioned popins to be cross-site login.
+The proposal primarily wants to address logging into 3rd party vendors that need to integrate with a single top-level site in a 1:1 relationship.
+However, specifically in enterprise or federated identity scenarios, users may want to integrate with the same 3rd party service for single-sign-on (SSO) or other 1:many purposes.
+Partitioned popins are not very effective at addressing that use case, because they’re partitioned.
+They don’t carry over state from the 3rd party vendor, thus requiring the user to log into the top-level site again and again, effectively rendering the single-sign-on functionality moot.
+In addition to increasing user friction, this has two potentially harmful consequences from a security perspective:
+
+* It trains the user to manually enter passwords (or, ideally, use a password manager) in more contexts.
+* It reduces the ability of login services to use cookies for security purposes, e.g. by massively increasing the number of times a user signs in “from a new device”.
+
+To counteract this risk, browsers that implement Partitioned Popins should offer a range of additional API options that make it easy for developers to implement SSO / federated login, such as FedCM, Passkeys or the Storage Access API.
+We believe that the increased user friction from partitioning will lead most developers to choose the most secure user experience if good alternatives are available.
+
+### Platform feature interaction
+
+The assumption behind security and privacy review of storage partitioning and third-party cookie deprecation has been that authentication should be performed in a top-level frame which has access to unpartitioned storage.
+The partitioned popin model breaks this assumption by providing a top-level frame that has partitioned storage.
+Compatibility between this and many existing web features will have to be considered to ensure we aren’t opening up an avenue for abuse.
+
+### Aggregator Tracking
+
+If we allow partitioning of any links opened by some top-level site this could enable cross-site tracking by unifying the cookie buckets of iframes in the opened popins.
+For example, if a top-frame on origin A (storage key: <A,A,SameSite>) opens a partitioned popins on origin B (storage key: <A,B,CrossSite>) and later one on origin C (storage key: <A,B,CrossSite>) and each popup embeds an iframe for origin A (storage key: <A,A,CrossSite>), these iframes share the same cookies/storage.
+This could enable a publisher with many outbound links to share ad-network cookies across any links opened in partitioned popins.
+This could be mitigated by a heuristic (prompting the user if more than one popin is opened per-navigation) or by prompting the user if a partitioned popin is to be opened.
+
+### Popin Spam
+
+The risk of popin spam is lower than popup spam as only one can be active at a time and user interaction with browser UX is not preempted (popins live within the owning window and the user can always close the tab/window or switch to a different tab/window).
+If needed further heuristics could be applied to rate limit popins or require user permission to open them.
+
+### COOP and Cross-Origin Isolation
+
+Although `postMessage` and `closed` would be available via the window proxy by default, it should remain possible to further restrict popin access via existing means.
+For websites already using [COOP `same-origin` or `same-origin-allow-popups` options](https://web.dev/articles/why-coop-coep), in cases where the opener would be severed they should remain as such.
+No path to enabling more window proxy access to popins should be added.
+
+## UX Considerations
+
+### Novelty
+
+This is a new web UX primitive and significant thought should go into design and delivery. Picking one platform (e.g., mobile) first for testing to get the implementation right may be preferable.
+
+### Accessibility
+
+This new surface should remain legible to screen readers and other common browser tools.
+The ability to close the popin is especially important to communicate to users who would have difficulty intuiting they could interact with the negative space around the popin.
+
+### Use for long-lived documents
+
+Popins are intended to be for short-term interactions that do not require user access to the initiator before resolution.
+What about [use cases](https://issuetracker.google.com/317188859) not covered by this (e.g., an iframed web app opening a popup to display information the user wants to compare against the opening iframe)?
+Can we provide the user with a way to ‘pop out’ the popin?
+How do we differentiate between the partitioned and unpartitioned top-level windows?
+
+### Link Preview
+
+It’s possible to get a popin-like UX on Chrome for Android or in Safari as part of the link-preview feature.
+These previews have different privacy and security implications than popins as they are unpartitioned, ephemeral/non-interactive while previewed, and resolve as new tabs.
+We should ensure the user isn’t confused between the two UX modes.
+
+## Future Work
+
+If we think forward to a time when popins have been shipped and adoption is significant, deprecating the riskiest parts of current popup and `window.opener` behavior should be considered.
+Should we launch unpartitioned popins as well?
+Can the desktop-specific popup UI be removed?
+Can we require all openers be severed or limited/defaulted to just `postMessage` and `closed`?
+If purpose built APIs (e.g., FedCM) have been delivered and widely adopted, these things may be within our reach, since it eliminates backwards-compatibility risks for use cases like login.

@@ -1,5 +1,8 @@
 # Explainer: Partitioned Popins
 
+This proposal is an early design sketch by Privacy Sandbox to describe the problem below and solicit feedback on the proposed solution.
+It has not been approved to ship in Chrome.
+
 * [Discussion](https://github.com/arichiv/partitioned-popins/issues)
 
 ## Introduction

@@ -196,7 +196,7 @@ Please note that we recommend the UX has the following properties:
 * While the opener’s address bar (on https://lorem.example/) is always editable, the popin’s address bar (on https://lorem.idaas.example/) is not editable by the user but remains visible as an indicator of what page was loaded.
 * The content of the opener should be grayed out and non-interactive (receive no click/touch/etc events, although JavaScript execution will continue) until the popin is closed. This is somewhat similar to the modal option for HTMLDialogueElement, though the dialogue itself is a new window and not a DOM overlay. If the opener is clicked while a popin is open, the popin should be foregrounded.
 * If the user switches tabs or windows the popin is not dismissed, but disappears to be re-displayed to the user if/when they switch back to that opening tab/window. If the opener is closed, the popin is automatically dismissed.
-Spoofability should be limited by making this more like a system-window/dialogue that cannot be simulated by an iframe with special stylings.
+* Spoofability should be limited by making this more like a system-window/dialogue that cannot be simulated by an iframe with special stylings.
 
 ### Open Questions
 

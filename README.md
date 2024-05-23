@@ -225,6 +225,12 @@ This provides an automated way for some login-like flows to automatically grant 
 This has the downside of providing access to unpartitioned storage in a partitioned context rather than requiring all storage remain partitioned.
 Additionally, these heuristics may be deprecated and require interaction.
 
+### [CSP: frame-ancestors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors)
+
+The IDP login page (secured via frame-ancestors) could simply be embedded in the RP as an iframe.
+Without full trust between the parties, frame-ancestors alone likely would not provide sufficient assurances around abuse of the IDP login iframe.
+With full trust between the parties, adaptation would be required on the part of the RP to allow the IDP login iframe to appear on their page.
+
 ## Privacy & Security Considerations
 
 ### Reducing the effectiveness of SSO on the web

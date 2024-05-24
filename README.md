@@ -225,6 +225,15 @@ This provides an automated way for some login-like flows to automatically grant 
 This has the downside of providing access to unpartitioned storage in a partitioned context rather than requiring all storage remain partitioned.
 Additionally, these heuristics may be deprecated and require interaction.
 
+### [CSP: frame-ancestors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors)
+
+The IdP login page (secured via frame-ancestors) could simply be embedded in the RP as an iframe.
+Without full trust between the parties, frame-ancestors alone likely would not provide sufficient assurances around abuse of the IdP login iframe.
+The IdP may trust the RP enough to perform limited auth-related communication through an opener relationship or third-party cookies, but it can not necessarily ensure that the RP's overall security posture is strong enough to prevent clickjacking or other attacks on the IdP iframe. Popins also give the IdP more control over the user experience, not having to rely on the RP to present the login flow in a trustworthy and understandable way to the user.
+Even with full trust between the parties, large-scale adaptation would be required on the part of RPs to allow the IdP login iframe to appear on their page.
+Using pop-ups for authentication flows is a very widely established pattern and very familiar to users on the web.
+
+Another crucial benefit of showing authentication flows in popups or popins is the user's ability to inspect the URL bar to decide whether to trust the site with their credentials or not, which is not possible with iframes.
 ## Privacy & Security Considerations
 
 ### Reducing the effectiveness of SSO on the web

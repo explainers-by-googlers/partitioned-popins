@@ -228,7 +228,7 @@ Additionally, these heuristics may be deprecated and require interaction.
 ### [CSP: frame-ancestors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors)
 
 The IDP login page (secured via frame-ancestors) could simply be embedded in the RP as an iframe.
-Without full trust between the parties, frame-ancestors alone likely would not provide sufficient assurances around abuse of the IDP login iframe.
+Without full trust between the parties, frame-ancestors alone likely would not provide sufficient assurances around abuse of the IdP login iframe. The IdP may trust the RP enough to perform limited auth-related communication through an opener relationship or third-party cookies, but it can not necessarily ensure that the RP's overall security posture is strong enough to prevent clickjacking or other attacks on the IdP iframe. Popins also give the IdP more control over the user experience, not having to rely on the RP to present the login flow in a trustworthy and understandable way to the user.
 With full trust between the parties, adaptation would be required on the part of the RP to allow the IDP login iframe to appear on their page.
 
 ## Privacy & Security Considerations

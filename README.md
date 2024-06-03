@@ -80,7 +80,7 @@ Investigations into [protecting openers](https://groups.google.com/a/chromium.or
 
 The following would be added to [windowFeatures](https://developer.mozilla.org/en-US/docs/Web/API/Window/open#windowfeatures):
 
-* popin - Indicates the window should be opened as an inline popin. The target must be `_blank` as others have no special meaning in this context. Cannot be used with `popup` feature as these options conflict. The features `width`, `height`, `left`, and `top` may or may not be respected by the rendering browser (especially on mobile). `noopener` and `noreferrer` will be respected as usual.
+* popin - Indicates the window should be opened as an inline popin. The target must be `_blank` as others have no special meaning in this context. Cannot be used with `popup` feature as these options conflict. The features `width`, `height`, `left`, and `top` may or may not be respected by the rendering browser (especially on mobile). It will not be possible to use `noopener` or `noreferrer` (attempting to do so will cause rejection of popin creation) as the popin must know the referrer to gain access to the correct storage partition and the blocking nature of popins negates any utility in having unreachable popins (a window would want to know when they were closed).
 
 A draft API shape for partitioned popins would look like:
 

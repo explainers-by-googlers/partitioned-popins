@@ -176,7 +176,7 @@ Popin-Policy: partitioned=("https://demo.example/")
 
 `partitioned=("https://demo.example/")` allows the page to be loaded in a partitioned popin context by a top-level frame on https://demo.example/ specifically.
 
-Navigating to or redirecting through a page without a `Popin-Policy` that permits the opening context to do so will cause the popin to automatically closeand report the error to the opening context.
+Navigating to or redirecting through a page without a `Popin-Policy` that permits the opening context to do so will cause the popin to automatically close and report the error to the opening context.
 
 This header is important to ensure that, where partitioned popins are used for authentication and other sensitive tasks, the pages engaging in these sensitive tasks affirmatively consent to the popin context. This prevents unexpectedly authenticated iframe contexts from breaking assumptions sites have made about their security model.
 

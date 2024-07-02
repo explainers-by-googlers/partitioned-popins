@@ -104,6 +104,8 @@ Within the popin context, `window.open` cannot be used to open a nested popin.
 This API is only available in secure contexts and can only open secure contexts.
 Attempting to navigate/redirect a popin to an insecure context will fail.
 
+The popin can navigate/redirect, but will always be partitioned as though it was embeded as an iframe in the opener.
+
 User interaction is required to open the popin.
 Without user interaction the popin will be blocked and an error will be thrown when calling `window.open`.
 This is important to prevent short-lived popins from being opened and immediately grabbing auto-fill information to nearly-silently complete login without user consent.
@@ -174,7 +176,7 @@ Popin-Policy: partitioned=("https://demo.example/")
 
 `partitioned=("https://demo.example/")` allows the page to be loaded in a partitioned popin context by a top-level frame on https://demo.example/ specifically.
 
-Navigating to or redirecting through a page without a `Popin-Policy` that permits the opening context to do so will cause the popin to automatically close the popin and report the error to the opening context.
+Navigating to or redirecting through a page without a `Popin-Policy` that permits the opening context to do so will cause the popin to automatically closeand report the error to the opening context.
 
 This header is important to ensure that, where partitioned popins are used for authentication and other sensitive tasks, the pages engaging in these sensitive tasks affirmatively consent to the popin context. This prevents unexpectedly authenticated iframe contexts from breaking assumptions sites have made about their security model.
 

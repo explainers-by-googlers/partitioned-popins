@@ -205,6 +205,7 @@ Please note that we recommend the UX has the following properties:
 * How do Partitioned Popins interact with permission delegation and iframe-based permission policies?
 * How do Partitioned Popins interact with Storage Access API requests and active Storage Access permissions?
 * Should autofill information be keyed on opener+popin-origin to prevent autofill based on popin-origin alone?
+* How will developer tools expose information about partitioned popins?
 
 ## Alternatives Considered
 

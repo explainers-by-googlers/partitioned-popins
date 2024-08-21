@@ -182,7 +182,7 @@ This header is important to ensure that, where partitioned popins are used for a
 
 #### Permissions Policy
 
-A new policy directive, `popin`, will be added to control which frames can open partitioned popins. This directive will have a default value of `self` (not `*` as many directives do) to ensure that without affirmative action, cross-site iframes will not be able to open popins.
+A new policy directive, `popins`, will be added to control which frames can open partitioned popins. This directive will have a default value of `self` (not `*` as many directives do) to ensure that without affirmative action, cross-site iframes will not be able to open popins.
 
 ### UX
 

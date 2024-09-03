@@ -141,7 +141,7 @@ partial interface Window {
 
 A draft API for a popin to detect it is a popin could look like:
 ```
-partial interface Navigator {
+partial interface Window {
   // Returns null if this isn't a popin context.
   PopinContextType? popinContextType();
 };

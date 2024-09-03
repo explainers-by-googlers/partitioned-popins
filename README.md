@@ -133,15 +133,15 @@ enum PopinContextType { "partitioned" };
 
 A draft API for feature detection by a prospective popin opener could look like:
 ```
-interface Navigator {
+partial interface Window {
   // Returns an empty array if no popin context types are supported.
-  Array<PopinContextType> popinContextTypesSupported();
+  sequence<PopinContextType> popinContextTypesSupported();
 };
 ```
 
 A draft API for a popin to detect it is a popin could look like:
 ```
-interface Navigator {
+partial interface Window {
   // Returns null if this isn't a popin context.
   PopinContextType? popinContextType();
 };

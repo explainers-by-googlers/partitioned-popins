@@ -242,7 +242,7 @@ Another crucial benefit of showing authentication flows in popups or popins is t
 
 The Document Picture in Picture API provides a way for a top-level frame to create a 'floating' and positionable window treated as same-origin (allowing DOM access).
 This differs in several key ways from our proposal: (1) the PiP window cannot navigate so any cross-origin content loaded in it via iframe has similar security considerations to any cross-origin iframes in the main page, (2) the PiP window isn't blocking use of the opener window, and (3) the PiP window stays visible if the user switches to use other tabs.
-The Document Picture in Picture API is more generalized than the HTMLVideoElement-only version, but it is not intended to support sensitive tasks such as authentication.
+The Document Picture in Picture API is more generalized than the HTMLVideoElement-only version, but it is not intended to support sensitive tasks (such as authentication) which the Parititioned Popins proposal does seek to support.
 
 ## Privacy & Security Considerations
 
